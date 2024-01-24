@@ -31,6 +31,7 @@ bullets = []
 blasts = []
 
 
+
 def update_list(list):
     for elem in list:
         elem.update()
@@ -199,12 +200,15 @@ class App:
                 "17711771",
             ],
         )
-        pyxel.sound(0).set("a3a2c1a1", "p", "7", "s", 5)
-        pyxel.sound(1).set("a3a2c2c2", "n", "7742", "s", 10)
+
+        pyxel.sound(0).set("e4d4c4e4g4", "p", "7", "s", 5) 
+        pyxel.sound(1).set("C4E4G4E4C4", "s", "3", "s", 10)
+
         self.scene = SCENE_TITLE
         self.score = 0
         self.background = Background()
         self.player = Player(pyxel.width / 2, pyxel.height - 20)
+        pyxel.mouse(True)
         pyxel.run(self.update, self.draw)
 
     def update(self):
@@ -219,8 +223,35 @@ class App:
         elif self.scene == SCENE_GAMEOVER:
             self.update_gameover_scene()
 
-    def update_title_scene(self):
-        if pyxel.btnp(pyxel.KEY_RETURN):
+    def update(self):
+        if pyxel.btn(pyxel.KEY_Q):
+            pyxel.quit()
+
+        self.background.update()
+
+        # マウスの座標取得
+        mouse_x, mouse_y = pyxel.mouse_x, pyxel.mouse_y
+
+        if self.scene == SCENE_TITLE:
+            self.update_title_scene(mouse_x, mouse_y)
+        elif self.scene == SCENE_PLAY:
+            self.update_play_scene()
+        elif self.scene == SCENE_GAMEOVER:
+            self.update_gameover_scene()
+
+    def update_title_scene(self, mouse_x, mouse_y):
+        # PRESS ENTERの文字の範囲
+        enter_text_x = 31
+        enter_text_y = 126
+        enter_text_width = 112
+        enter_text_height = 7
+
+        # マウスが範囲内にあり、かつENTER KEYが押された場合
+        if (
+            enter_text_x <= mouse_x <= enter_text_x + enter_text_width
+            and enter_text_y <= mouse_y <= enter_text_y + enter_text_height
+            and pyxel.btnp(pyxel.KEY_RETURN)
+        ):
             self.scene = SCENE_PLAY
 
     def update_play_scene(self):
@@ -312,6 +343,5 @@ class App:
         draw_list(blasts)
         pyxel.text(43, 66, "MINNIE WON", 8)
         pyxel.text(31, 126, "- PRESS ENTER -", 13)
-
 
 App()
